@@ -1,6 +1,6 @@
 # SEQUENCE
 
-## An evidence-backed forecast of a construction project's final delivery date
+## A verifiable control system for a construction project's final-delivery risk
 
 ### The one-line pitch
 
@@ -17,7 +17,7 @@ A schedule promises that a design will be ready, an approval will arrive, a mate
 - a weekly, project-level early-warning system for the **final contractual / practical-completion date**;
 - an evidence trail from local events to schedule risk;
 - a tool for a project manager or planner deciding what to escalate this week;
-- a replayable case study on one real historical project.
+- a feasibility prototype tested on public, traceable schedule history and real but incomplete site records.
 
 ### It is not
 
@@ -33,12 +33,12 @@ A schedule promises that a design will be ready, an approval will arrive, a mate
 
 | Studio question | SEQUENCE answer | Evidence for the pitch |
 |---|---|---|
-| **Where is the problem?** | Stage 3: on-site execution. The final date is reviewed weekly, but evidence of its movement is scattered across programme updates, site records, approvals and messages. | One UpSite project: baseline date, eventual completion date, schedule revisions and dated site records. |
+| **Where is the problem?** | Stage 3: on-site execution. The final date is reviewed weekly, but evidence of its movement is scattered across programme updates, site records, approvals and messages. | Public schedule-history records plus the UpSite document map; no invented UpSite final outcome. |
 | **What is the real problem?** | A project team discovers that the final date is at risk after local slippages have already accumulated. The schedule holds the plan; the earliest warning signs live elsewhere. | Dated examples: late delivery, pending MAF, redesign/recalculation, failed inspection, open snag, blocked predecessor. |
 | **Who experiences it?** | Primary user: project manager / planning manager during weekly control. Evidence contributors: site manager, subcontractors, document controller. Affected: client, contractor and eventual occupants. | One interview with a planner or site manager: “When did you know the date had moved?” |
-| **What data exists?** | MS Project baseline and updates, task dependencies, actual progress, site diaries, meeting minutes, project chat, MAF/submittal register, test sheets, snag list and remaining-works lists. | The files already available from UpSite; access and gaps documented. |
-| **What can AI generate?** | A dated completion range, risk level, the most influential evidence and questions to investigate. | A historical replay: each week sees only data available at that date. |
-| **Why AI, not only a rule?** | The schedule calculation and integrity checks are rules. AI is needed to extract and classify dated disruption events from unstructured diaries, chats and PDFs, then link them to activities. | Compare a schedule-only forecast against schedule + document evidence. |
+| **What data exists?** | MS Project baseline and updates, task dependencies, actual progress, site diaries, meeting minutes, project chat, MAF/submittal register, test sheets, snag list and remaining-works lists. | Public forecast/actual history for outcome evaluation; UpSite records for extraction and audit. |
+| **What can AI generate?** | A dated completion range, risk level, the most influential evidence and questions to investigate. | A time-bounded replay at each public reporting date; no future data exposed. |
+| **Why AI, not only a rule?** | The schedule calculation and integrity checks are rules. AI extracts and classifies dated disruption events from unstructured diaries, chats and PDFs, then proposes links to activities for a human to verify. | Benchmark the schedule-risk layer on public outcomes; audit the evidence-extraction layer separately on UpSite. |
 | **Where are the limits?** | Missing records, ambiguous language, unrecorded site events and a poor baseline constrain the forecast. It reports a range and confidence, not a guaranteed date. | Measure error in days, early-warning lead time, false alarms and traceability. |
 | **Who carries responsibility?** | The project manager owns the decision. SEQUENCE supplies cited evidence; it does not instruct teams to accelerate, reallocate labour or change contract obligations. | Read-only data, source citation and human sign-off in the interface. |
 
@@ -52,7 +52,7 @@ Pitch it as:
 
 > Construction teams already have a schedule. What they lack is a reliable, early connection between the small problems reported on site today and the final date they will move tomorrow.
 
-The literature supports the category of problem: reviews repeatedly list poor planning, material shortages or slow delivery, approval delays, coordination failures and design changes among common construction-delay causes. The project will not claim those causes are equally important on every site; it will test which are visible in the UpSite records. [A review identifying 149 delay causes across 97 studies](https://www.sciencedirect.com/org/science/article/abs/pii/S1753837819000627)
+The literature supports the category of problem: reviews repeatedly list poor planning, material shortages or slow delivery, approval delays, coordination failures and design changes among common construction-delay causes. The project will not claim those causes are equally important on every site. It will only test which are extractable from the available UpSite records. [A review identifying 149 delay causes across 97 studies](https://www.sciencedirect.com/org/science/article/abs/pii/S1753837819000627)
 
 ---
 
@@ -159,13 +159,13 @@ The document agent extracts structured, dated events from messy project records:
   confidence, stated_status }
 ```
 
-Then the forecast engine tests whether those additional events improve the forecast over the schedule-only baseline.
+In a future partner pilot, the forecast engine can test whether verified events improve the forecast over a schedule-only baseline. The present prototype does not make that performance claim from UpSite: it lacks the continuous, traceable history required to test it fairly.
 
 ### The claim you can honestly make
 
-> “On this project, does adding dated evidence from unstructured site records give an earlier or more accurate warning of a move in the final completion date than the programme alone?”
+> “SEQUENCE makes final-date risk verifiable: it tests date-risk forecasting where public outcomes exist, and it makes the scattered evidence from a real site auditable before a planner acts.”
 
-That question is narrow, measurable and strong enough for the studio.
+The two parts are deliberately distinct. The public benchmark evaluates forecast quality; UpSite evaluates whether the evidence extraction is accurate and useful.
 
 ---
 
@@ -180,30 +180,36 @@ Therefore, do not claim that SEQUENCE beats those platforms or is the first to f
 
 > SEQUENCE is an evidence-first project-control layer for a contractor or project team whose critical signals sit in their own schedule, diaries, approvals and chat — and whose forecast must be traceable to those records.
 
-Because the team has one historical project, this is a case study and prototype, not a general machine-learning product. That honesty is a strength.
+This is a feasibility prototype, not a general machine-learning product. That honesty is a strength.
 
 ---
 
-## How to test it with UpSite
+## How we test it honestly
 
-### Historical replay
+### 1. Public forecast benchmark — NYC Capital Projects Dashboard
 
-1. Establish the actual final completion date and the original baseline date.
-2. Choose weekly “as-of” dates across the project.
-3. At each date, expose the system only to data created on or before that date.
-4. Run the schedule-only baseline.
-5. Run SEQUENCE with dated evidence from documents.
-6. Compare both forecasts with what subsequently happened.
+[NYC’s public Schedule History and Variance dataset](https://data.cityofnewyork.us/City-Government/Capital-Projects-Dashboard-Citywide-Schedule-Histo/95tx-snak/about_data) records historical estimated and actual project completion dates, reporting periods, phases and revisions. It has 22.5k schedule snapshots and is updated three times per year.
 
-### Measures
+1. Choose projects with more than one historical snapshot and a later actual completion date.
+2. At each historical reporting date, expose the system only to rows available then.
+3. Compare a transparent baseline — the agency’s current forecast — with a simple SEQUENCE risk rule from prior revision trend, phase and variance.
+4. Keep projects separate between development and test; never put the past of the same project in both.
+5. Measure error in days, median error, warning lead time between reporting periods and false alarms for a pre-set delay threshold.
+
+The dataset’s stated reason for a forecast change is **not** used to predict that same change. It is a retrospective check on the explanation, otherwise we would leak the answer into the input.
+
+### 2. UpSite evidence audit — not a final-date benchmark
+
+Use the MPP, dated chat, MAF register and remaining-works lists to create 20–30 anonymised evidence cards. A human marks a small truth set as relevant / irrelevant and confirms the category. Measure:
 
 | Measure | Meaning |
 |---|---|
-| Error in days | How close was the estimated final date? |
-| Warning lead time | How many weeks before the actual miss did it warn? |
-| False-alarm rate | How often did it predict a miss that did not occur? |
-| Evidence precision | Are cited events genuinely relevant and dated correctly? |
-| Human usefulness | Would the PM know what to investigate next? |
+| Evidence precision | Is a cited event genuinely relevant and dated correctly? |
+| Category accuracy | Did the agent distinguish an approval, material, design, access, quality or coordination event? |
+| Traceability | Can a planner open the source and challenge the interpretation? |
+| Abstention quality | Does the agent say “needs confirmation” instead of inventing an activity link? |
+
+No error-in-days or causal-delay result is reported for UpSite. The project does not have a complete, traceable outcome history for it.
 
 ---
 
@@ -213,11 +219,11 @@ Because the team has one historical project, this is a case study and prototype,
 2. **The problem** — schedule date vs physical reality; a small site event can move a final contractual date.
 3. **The broken-promise map** — planning, approvals/design, procurement, execution.
 4. **The moment and the user** — weekly project-control meeting; PM/planner must decide what to escalate.
-5. **Real traces already exist** — MPP, diaries, chats, MAFs, snags, tests. Show the UpSite data map.
+5. **Two kinds of evidence** — public forecast/actual history for validation; MPP, chats, MAFs and snags for real-site evidence extraction.
 6. **The product** — a date range, confidence and evidence — not a black-box prediction.
 7. **Why AI / why not only AI** — rules calculate; language model structures unstructured evidence; human verifies.
 8. **How it works** — agent harness and strict boundaries.
-9. **The test** — historical weekly replay; schedule-only baseline versus schedule + documents.
+9. **The test** — public temporal replay against actual completion dates, plus an audited UpSite evidence-extraction test.
 10. **Limits and value** — no guarantees, no blame; earlier, traceable escalation for the final project date.
 
 ---
@@ -232,7 +238,7 @@ Because the team has one historical project, this is a case study and prototype,
 >
 > The AI does not invent the date. The schedule calculations remain explicit. AI is used where the team currently loses time: turning scattered, unstructured project records into traceable signals. The project manager remains responsible for checking whether an event really threatens the critical path and for deciding what to do.
 >
-> We will test SEQUENCE by replaying a completed UpSite project week by week. We will compare a schedule-only forecast against our schedule-plus-evidence forecast, measuring error in days, early-warning lead time and false alarms. We are not claiming a universal delay predictor. We are building a verifiable way to see a project’s final-date risk earlier, and to see why.
+> We will not pretend that incomplete UpSite records can prove a final-date prediction. Instead, we test the date-risk forecast on public project histories that contain both successive forecasts and actual completion dates. Separately, we test the hard real-world part on UpSite: can the agent read incomplete chats, approvals and remaining-work lists, turn them into cited evidence, and say clearly when a planner must verify the link? We are not claiming a universal delay predictor. We are building a verifiable way to see a project’s final-date risk earlier, and to see why.
 
 ---
 
@@ -242,7 +248,7 @@ Because the team has one historical project, this is a case study and prototype,
 |---|---|
 | Why not just update MS Project properly? | MS Project holds the programme but not all the earliest evidence: diaries, approval records and project chat. SEQUENCE does not replace update discipline; it makes those records usable in forecast review. |
 | Why AI? | Rules already calculate schedule status. AI is useful for extracting comparable, dated events from unstructured records at a scale a planner cannot review weekly. |
-| How can one project train a predictor? | It cannot train a universal model. We use a historical replay as a case study, compare against a non-AI baseline, and report uncertainty. |
+| How can one project train a predictor? | It cannot. UpSite does not train the predictor. Public, traceable project histories are used for the first benchmark; UpSite tests evidence extraction. A partner pilot with complete updates is required before we claim evidence improves forecasting. |
 | How do you know an event affects the final date? | The system presents a candidate link to unfinished critical or near-critical work. The PM validates it; unconfirmed links remain hypotheses. |
 | What happens when it is wrong? | A false warning costs investigation time; a false reassurance is more dangerous. The UI shows a range, evidence and data gaps, and never auto-changes the programme or assigns blame. |
 
